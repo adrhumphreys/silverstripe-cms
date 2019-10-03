@@ -115,12 +115,18 @@ $.entwine('ss.tree', function($) {
               'submenu': [{
                 'label': i18n._t('CMS.ThisPageOnly'),
                 'action': function(obj) {
-                  $('.cms-container').entwine('.ss').loadPanel(
-                    $.path.addSearchParams(
-                      i18n.sprintf(self.data('urlDuplicate'), obj.data('id')),
-                      self.data('extraParams')
-                    )
-                  );
+                  // oh hey, we don't need to do this shit
+                  fetch($.path.addSearchParams(
+                    i18n.sprintf(self.data('urlDuplicate'), obj.data('id')),
+                    self.data('extraParams')
+                  ))
+
+                  // $('.cms-container').entwine('.ss').loadPanel(
+                  //   $.path.addSearchParams(
+                  //     i18n.sprintf(self.data('urlDuplicate'), obj.data('id')),
+                  //     self.data('extraParams')
+                  //   )
+                  // );
                 }
               }, {
                 'label': i18n._t('CMS.ThisPageAndSubpages'),
