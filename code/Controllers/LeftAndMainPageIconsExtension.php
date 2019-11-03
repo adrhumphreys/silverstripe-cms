@@ -2,11 +2,13 @@
 
 namespace SilverStripe\CMS\Controllers;
 
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extension;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\Requirements;
 
 /**
@@ -28,6 +30,13 @@ class LeftAndMainPageIconsExtension extends Extension
      */
     public function generatePageIconsCss()
     {
+        /** @var CacheInterface $cache */
+        $cache = Injector::inst()->get(CacheInterface::class . '.SiteTree_PageIcons');
+
+        if ($cache->has('css')) {
+            return $cache->get('css');
+        }
+
         $css = '';
         $classes = ClassInfo::subclassesFor(SiteTree::class);
         foreach ($classes as $class) {
@@ -41,6 +50,9 @@ class LeftAndMainPageIconsExtension extends Extension
                 $css .= sprintf('%s { background: transparent url(\'%s\') 0 0 no-repeat; }', $selector, $iconURL);
             }
         }
+
+        $cache->set('css', $css);
+
         return $css;
     }
 }
